@@ -1,11 +1,14 @@
 import express from "express";
 import cors from "cors";
-import routes from "./routes/route";
 import dotenv from "dotenv";
 import { connectDB } from "./database/db"
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { globalErrorHandler } from "./middlewares/error.middleware";
+import authRouter from "./routes/auth.route";
+import profileRouter from "./routes/profile.route";
+import noteRouter from "./routes/note.route";
+
 // dotenv config
 dotenv.config();
 const app = express();
@@ -13,7 +16,7 @@ const app = express();
 app.use(helmet());
 //cors
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_URL,
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -24,7 +27,10 @@ app.use(cookieParser());
 connectDB();
 
 //routes
-app.use("/api", routes);
+app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/notes", noteRouter);
+
 app.use(globalErrorHandler)
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

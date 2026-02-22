@@ -1,38 +1,43 @@
-import { getProfileByUserId, updateProfile } from "../services/profile.service";
 import { Request, Response } from 'express';
 import { catchAsync } from "../utils/catchAsync";
 import { AppError } from '../utils/appError';
 import { validateUser } from '../utils/validate.user';
+import { ProfileService } from '../services/profile.service'; // Service'in class olduğunu varsayıyorum
 
-// get profile by user id controller
-export const getProfileByUserIdController = catchAsync(
-    async (req: Request, res: Response) => {
-        const userId = validateUser(req);
-        const profile = await getProfileByUserId(userId);
-        if (!profile) {
-            throw new AppError("Profile not found.", 404)
-        }
-        res.status(200).json({
-            status: "success",
-            data: profile
-        });
+export class ProfileController {
+  // Service'i constructor üzerinden içeri alıyoruz
+  constructor(private profileService: ProfileService) {}
+
+  // PROFIL GETIRME
+  getProfileByUserId = catchAsync(async (req: Request, res: Response) => {
+    const userId = validateUser(req);
+    
+    // Service metodunu çağırıyoruz
+    const profile = await this.profileService.getProfileByUserId(userId);
+
+    if (!profile) {
+      throw new AppError("Profile not found.", 404);
     }
-);
 
-// export const updateProfile = 
-// async (userId: number, profileData: ProfileDto) => {
-export const updateProfileController = catchAsync(
-    async (req: Request, res: Response) => {
-        const userId = validateUser(req);
-        const profileData = req.body;
-        const updatedProfile = await updateProfile(
-            userId,
-            profileData
-        );
-        res.status(200).json({
-            status: "success",
-            data: updatedProfile
-        });
-    }
-);
+    res.status(200).json({
+      status: "success",
+      data: profile
+    });
+  });
 
+  // PROFIL GÜNCELLEME
+  updateProfile = catchAsync(async (req: Request, res: Response) => {
+    const userId = validateUser(req);
+    const profileData = req.body;
+
+    const updatedProfile = await this.profileService.updateProfile(
+      userId,
+      profileData
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: updatedProfile
+    });
+  });
+}
