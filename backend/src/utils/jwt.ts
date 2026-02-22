@@ -4,11 +4,14 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 interface JwtPayload {
   userId: number;
-}
+  email: string;
+
+};
+
 export const generateToken = (payloadData: { userId: number, email: string }) => {
   return jwt.sign(
     {
-      userId: payloadData.userId,   
+      userId: payloadData.userId,
       email: payloadData.email
     },
     JWT_SECRET,
@@ -19,6 +22,7 @@ export const verifyToken = (token: string): JwtPayload | null => {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload;
   } catch {
-    return null;
+    throw new Error("Invalid or expired token");
+
   }
 };
