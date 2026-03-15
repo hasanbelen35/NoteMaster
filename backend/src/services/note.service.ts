@@ -50,4 +50,45 @@ export class NoteService {
             }
         });
     }
+    // GET PAGINATED NOTES SERVICE
+    async getPaginatedNotesService(page: number, limit: number) {
+        const offset = (page - 1) * limit;
+
+        const [notes, totalNotes] = await prisma.$transaction([
+            prisma.note.findMany({
+                skip: offset,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                where: { isPublic: true },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            surname: true,
+                            profile: {
+                                select: {
+                                    username: true,
+                                    avatarUrl: true,
+                                    university: true,
+                                    department: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            }),
+            prisma.note.count({
+                where: { isPublic: true }
+            })
+        ]);
+
+        return {
+            notes,
+            totalPages: Math.ceil(totalNotes / limit),
+            currentPage: page,
+            hasMore: page < Math.ceil(totalNotes / limit)
+        };
+    }
 }
+

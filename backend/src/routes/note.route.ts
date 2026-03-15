@@ -15,5 +15,5 @@ noteRouter.post('/create-new-note', authMiddleware, validate(noteSchema), noteCo
 noteRouter.get('/get-all-notes', authMiddleware, noteController.getAllNotesController);
 noteRouter.delete('/delete-note/:id', authMiddleware, noteController.deleteNoteController);
 noteRouter.put('/update-note/:id', authMiddleware, validate(noteSchema), noteController.updateNoteController);
-
+noteRouter.get('/feed', authMiddleware, noteController.getPaginatedNotesController);
 export default noteRouter;

@@ -4,9 +4,9 @@ import { catchAsync } from '../utils/catchAsync';
 import { validateUser } from '../utils/validate.user';
 
 export class NoteController {
-   
+
     constructor(private noteService: NoteService) { }
-    
+
     // CREATE NOTE CONTROLLER
     createNoteController = catchAsync(async (req: Request, res: Response) => {
         const userId = validateUser(req);
@@ -31,7 +31,7 @@ export class NoteController {
             data: notes
         });
     });
-  
+
     // DELETE NOTE CONTROLLER
     deleteNoteController = catchAsync(async (req: Request, res: Response) => {
         const userId = validateUser(req);
@@ -42,7 +42,7 @@ export class NoteController {
             message: 'Note deleted successfully.'
         });
     });
-   
+
     // UPDATE NOTE CONTROLLER
     updateNoteController = catchAsync(async (req: Request, res: Response) => {
         const userId = validateUser(req);
@@ -56,6 +56,23 @@ export class NoteController {
         res.status(200).json({
             status: 'success',
             data: updatedNote
+        });
+    });
+    // GET PAGINATED NOTES CONTROLLER
+    getPaginatedNotesController = catchAsync(async (req: Request, res: Response) => {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const { notes, totalPages, currentPage, hasMore } = await this.noteService.getPaginatedNotesService(page, limit);
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                notes,
+                totalPages,
+                currentPage,
+                hasMore
+            }
         });
     });
 }
