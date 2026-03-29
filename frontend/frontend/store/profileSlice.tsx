@@ -89,6 +89,7 @@ const profileSlice = createSlice({
             state.loading = false;
             state.success = false;
         },
+    
     },
     extraReducers: (builder) => {
         builder

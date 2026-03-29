@@ -14,7 +14,7 @@ const authController = new AuthController(authService);
 //  AUTH ROUTES 
 authRouter.post('/register', validate(registerSchema), authController.register);
 authRouter.post('/login', validate(loginSchema), authController.login);
-authRouter.get("/logout", authController.logout);
+authRouter.get("/logout", authMiddleware, authController.logout);
 authRouter.get("/me", authMiddleware, authController.getMe);
 authRouter.get("/protected", authMiddleware, protectedRoute);
 

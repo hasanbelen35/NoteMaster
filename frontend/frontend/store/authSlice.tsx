@@ -75,15 +75,17 @@ export const registerUser = createAsyncThunk(
         }
     }
 );
+// authRouter.get("/logout", authController.logout);
 
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
     async (_, { rejectWithValue }) => {
         try {
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/logout`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/logout`,
                 { withCredentials: true }
             );
+            
             return response.data;
         } catch (err) {
             const error = err as AxiosError<ApiError>;

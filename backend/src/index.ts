@@ -8,7 +8,8 @@ import { globalErrorHandler } from "./middlewares/error.middleware";
 import authRouter from "./routes/auth.route";
 import profileRouter from "./routes/profile.route";
 import noteRouter from "./routes/note.route";
-
+import httpLogger from './middlewares/httpLogger.middleware';
+import logger from './utils/logger';
 // dotenv config
 dotenv.config();
 const app = express();
@@ -25,7 +26,8 @@ app.use(cookieParser());
 
 //database connection
 connectDB();
-
+//http logger
+app.use(httpLogger);  
 //routes
 app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
