@@ -1,6 +1,8 @@
 import winston from 'winston';
 import path from 'path';
 
+const logDir = 'logs';
+
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logFormat = printf(({ level, message, timestamp, stack }) => {
